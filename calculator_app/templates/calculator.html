@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Proper Working Calculator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+* {
+    box-sizing: border-box;
+    font-family: system-ui, sans-serif;
+}
+
+body {
+    margin: 0;
+    height: 100vh;
+    background: linear-gradient(135deg, #0f172a, #020617);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.calculator {
+    width: 320px;
+    background: #020617;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 25px 60px rgba(0,0,0,.7);
+}
+
+.screen {
+    padding: 20px;
+    font-size: 2.4rem;
+    color: #f8fafc;
+    text-align: right;
+    min-height: 90px;
+}
+
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+}
+
+button {
+    border: none;
+    padding: 20px;
+    font-size: 1.4rem;
+    background: #1e293b;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover { background: #334155; }
+button:active { transform: scale(0.95); }
+
+button[data-type="operator"] {
+    background: #6366f1;
+}
+button[data-type="operator"]:hover {
+    background: #4f46e5;
+}
+
+button[data-type="equal"] {
+    background: #22c55e;
+    grid-column: span 2;
+}
+
+button[data-type="clear"] {
+    background: #ef4444;
+    grid-column: span 2;
+}
+</style>
+</head>
+
+<body>
+
+<div class="calculator">
+    <div class="screen" id="screen">0</div>
+
+    <div class="buttons" id="buttons">
+        <button data-type="clear">AC</button>
+        <button data-type="operator" data-value="/">÷</button>
+
+        <button data-type="number" data-value="7">7</button>
+        <button data-type="number" data-value="8">8</button>
+        <button data-type="number" data-value="9">9</button>
+        <button data-type="operator" data-value="*">×</button>
+
+        <button data-type="number" data-value="4">4</button>
+        <button data-type="number" data-value="5">5</button>
+        <button data-type="number" data-value="6">6</button>
+        <button data-type="operator" data-value="-">−</button>
+
+        <button data-type="number" data-value="1">1</button>
+        <button data-type="number" data-value="2">2</button>
+        <button data-type="number" data-value="3">3</button>
+        <button data-type="operator" data-value="+">+</button>
+
+        <button data-type="number" data-value="0">0</button>
+        <button data-type="number" data-value=".">.</button>
+        <button data-type="equal">=</button>
+    </div>
+</div>
+
+<script>
+const screen = document.getElementById("screen");
+const buttons = document.getElementById("buttons");
+
+let current = "";
+let previous = "";
+let operator = null;
+
+/* Update display */
+function update(val) {
+    screen.textContent = val || "0";
+}
+
+/* Calculate result */
+function calculate() {
+    const a = parseFloat(previous);
+    const b = parseFloat(current);
+    if (isNaN(a) || isNaN(b)) return;
+
+    let result;
+    switch (operator) {
+        case "+": result = a + b; break;
+        case "-": result = a - b; break;
+        case "*": result = a * b; break;
+        case "/":
+            if (b === 0) {
+                update("Error");
+                reset();
+                return;
+            }
+            result = a / b;
+    }
+
+    current = result.toString();
+    operator = null;
+    previous = "";
+}
+
+/* Reset calculator */
+function reset() {
+    current = "";
+    previous = "";
+    operator = null;
+}
+
+/* 🔥 SINGLE CLICK HANDLER (THIS FIXES EVERYTHING) */
+buttons.addEventListener("click", (e) => {
+    const btn = e.target;
+    if (btn.tagName !== "BUTTON") return;
+
+    const type = btn.dataset.type;
+    const value = btn.dataset.value;
+
+    if (type === "number") {
+        if (value === "." && current.includes(".")) return;
+        current += value;
+        update(current);
+    }
+
+    if (type === "operator") {
+        if (!current) return;
+        if (previous) calculate();
+        operator = value;
+        previous = current;
+        current = "";
+    }
+
+    if (type === "equal") {
+        calculate();
+        update(current);
+    }
+
+    if (type === "clear") {
+        reset();
+        update("0");
+    }
+});
+</script>
+
+</body>
+</html>
