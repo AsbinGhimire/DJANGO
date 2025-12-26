@@ -1,0 +1,34 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Password Generator</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="container text-center">
+        <h1>Password Generator</h1>
+        <form action="/password/" method="get">
+            <div class="form-group">
+                <label for="length">Password Length:</label>
+                <input type="number" class="form-control" id="length" name="length" value="12" min="6" max="20">
+            </div>
+            <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="uppercase" name="uppercase" checked>
+                <label class="form-check-label" for="uppercase">Include Uppercase Letters</label>
+            </div>
+            <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="special" name="special" checked>
+                <label class="form-check-label" for="special">Include Special Characters</label>
+            </div>
+            <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="numbers" name="numbers" checked>
+                <label class="form-check-label" for="numbers">Include Numbers</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Generate Password</button>
+        </form>
+    </div>
+</body>
+</html>
