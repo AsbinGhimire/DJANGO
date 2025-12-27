@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    <label for="weight">Weight (kg):</label>
+    <input type="number" name="weight" id="weight" required>
+    <label for="height">Height (m):</label>
+    <input type="number" name="height" id="height" required>
+    <button type="submit">Calculate BMI</button>
+</form>
+{% endblock %}
